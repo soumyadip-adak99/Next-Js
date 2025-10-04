@@ -1,6 +1,5 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
-
 export const VIDEO_DIMENSTIONS = {
     width: 1080,
     height: 1920
@@ -19,7 +18,6 @@ export interface IVideo {
         quality?: number
     }
 }
-
 
 const videoSchema = new Schema<IVideo>(
     {
@@ -60,7 +58,7 @@ const videoSchema = new Schema<IVideo>(
             },
 
             quality: {
-                ype: Number,
+                type: Number,
                 min: 1,
                 max: 100
             }
@@ -68,7 +66,6 @@ const videoSchema = new Schema<IVideo>(
     },
     { timestamps: true }
 )
-
 
 const Video = models?.Video || model<IVideo>("Video", videoSchema)
 
