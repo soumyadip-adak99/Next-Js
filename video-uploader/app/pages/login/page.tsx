@@ -118,7 +118,7 @@ function Login() {
 
                             <div className='text-center pt-2 sm:pt-4'>
                                 <p className='text-xs sm:text-sm text-gray-600'>
-                                    Don't have an account? {' '}
+                                    {`Don't have an account? `}
                                     <Link
                                         href="/pages/register"
                                         className='text-indigo-600 hover:text-indigo-800 transition-colors duration-200 font-semibold'

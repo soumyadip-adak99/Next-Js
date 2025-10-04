@@ -2,14 +2,12 @@
 
 import React from 'react'
 import Navbar from './components/Navbar'
-import HomeComponent from './components/HomeComponent'
 import { Toaster } from 'react-hot-toast'
 import { useSession } from 'next-auth/react'
 import { Mosaic } from 'react-loading-indicators'
 
 export default function Index() {
-    const { data: session, status } = useSession()
-
+    const { status } = useSession()
 
     if (status === "loading") {
         return (
@@ -19,11 +17,9 @@ export default function Index() {
         )
     }
 
-
     return (
         <>
             <Navbar />
-            <HomeComponent />
             <Toaster />
         </>
     )

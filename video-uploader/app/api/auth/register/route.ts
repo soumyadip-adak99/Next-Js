@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
         )
 
     } catch (error) {
+        console.error("Error getting api-register: ", error)
         return NextResponse.json(
             { error: "Faild to register user" },
             { status: 400 }

@@ -4,7 +4,7 @@ import Video, { IVideo } from "@/models/Video";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function get() {
+export async function GET() {
     try {
         await connectDB()
         const videos = await Video.find({}).sort({ createdAt: -1 }).lean();
@@ -15,6 +15,7 @@ export async function get() {
 
         return NextResponse.json(videos)
     } catch (error) {
+        console.error("Error Video api GET METHOD: ", error)
         return NextResponse.json(
             { error: "Faild to fetch videos" },
             { status: 500 }
@@ -59,6 +60,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(newVideo)
 
     } catch (error) {
+        console.error("Getting error form video POST method: ", error)
         return NextResponse.json(
             { error: "Faild to create video." },
             { status: 500 }

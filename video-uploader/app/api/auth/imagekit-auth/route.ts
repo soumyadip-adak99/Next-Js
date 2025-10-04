@@ -9,9 +9,10 @@ export async function GET() {
 
         return Response.json({ authenticationParameters, publicKey: process.env.IMAGEKIT_PUBLIC_KEY })
     } catch (error) {
+        console.error("Error getting on api/auth/imagekit-auth/ :-", error)
         return Response.json(
             {
-                error: "Authentication for imagekit faild",
+                error: "Authentication for imagekit failed",
             },
             {
                 status: 500
