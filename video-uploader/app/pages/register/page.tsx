@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Mosaic } from "react-loading-indicators";
 import { LuX } from 'react-icons/lu'
+import LoadingSpinner from '@/app/components/LoadingSpinner';
 
 export default function Page() {
     const [email, setEmail] = useState<string>("")
@@ -137,7 +138,7 @@ export default function Page() {
                                     disabled={loading || !email.trim() || !password.trim() || !confirmPassword.trim() || error}
                                     className="w-full bg-gray-700 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                                 >
-                                    {loading ? 'Registering...' : 'Register'}
+                                    {loading ? <LoadingSpinner message={`Registering....`} /> : 'Register'}
                                 </button>
 
                                 <div className="mt-4 sm:mt-6 text-center">

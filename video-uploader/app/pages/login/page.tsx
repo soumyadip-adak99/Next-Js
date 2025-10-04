@@ -1,5 +1,6 @@
 "use client"
 
+import LoadingSpinner from '@/app/components/LoadingSpinner'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -113,7 +114,7 @@ function Login() {
                                 disabled={loading || !isFormValid}
                                 className={`w-full bg-gray-700 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base`}
                             >
-                                {loading ? "Logging in..." : "Log in"}
+                                {loading ? <LoadingSpinner message={"Logging in..."} /> : "Log in"}
                             </button>
 
                             <div className='text-center pt-2 sm:pt-4'>
