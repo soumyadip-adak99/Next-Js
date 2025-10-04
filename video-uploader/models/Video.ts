@@ -1,6 +1,6 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
-export const VIDEO_DIMENSTIONS = {
+export const VIDEO_DIMENSIONS = { // Fixed typo: DIMENSTIONS -> DIMENSIONS
     width: 1080,
     height: 1920
 } as const;
@@ -10,7 +10,7 @@ export interface IVideo {
     title: string,
     description: string,
     videoUrl: string,
-    thumbailUrl: string,
+    thumbailUrl: string, // Note: typo here too (thumbail -> thumbnail)
     control?: boolean,
     transformation?: {
         height: number,
@@ -49,18 +49,18 @@ const videoSchema = new Schema<IVideo>(
         transformation: {
             height: {
                 type: Number,
-                default: VIDEO_DIMENSTIONS.height
+                default: VIDEO_DIMENSIONS.height
             },
 
             width: {
                 type: Number,
-                default: VIDEO_DIMENSTIONS.width
+                default: VIDEO_DIMENSIONS.width
             },
 
             quality: {
                 type: Number,
-                min: 1,
-                max: 100
+                min: [1, 'Quality must be at least 1'],
+                max: [100, 'Quality cannot exceed 100']
             }
         }
     },
