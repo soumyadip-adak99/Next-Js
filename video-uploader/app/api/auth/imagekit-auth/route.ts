@@ -7,11 +7,6 @@ export async function GET() {
             privateKey: process.env.IMAGE_KIT_PRIVATE_KEY!,
         })
 
-        // const authenticationParameters = getUploadAuthParams({
-        //     publicKey: "public_fHLSrHvOrJD1oGTiU/BMHFRxBF8=",
-        //     privateKey: "private_nyMvxWJOBl0RPmA/rLfBVSnV5wE="
-        // })
-
         return Response.json(authenticationParameters)
     } catch (error) {
         console.error("Error getting on api/auth/imagekit-auth/ :-", error)
