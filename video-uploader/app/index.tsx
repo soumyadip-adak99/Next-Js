@@ -5,6 +5,7 @@ import Navbar from './components/Navbar'
 import { Toaster } from 'react-hot-toast'
 import { useSession } from 'next-auth/react'
 import { Mosaic } from 'react-loading-indicators'
+import VideoComponent from './components/VideoComponent'
 
 export default function Index() {
     const { status } = useSession()
@@ -20,6 +21,7 @@ export default function Index() {
     return (
         <>
             <Navbar />
+            <VideoComponent />
             <Toaster />
         </>
     )

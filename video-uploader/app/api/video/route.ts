@@ -37,8 +37,9 @@ export async function POST(request: NextRequest) {
         await connectDB()
 
         const body: IVideo = await request.json();
+        console.log(body)
 
-        if (!body.title || !body.description || !body.videoUrl || body.thumbnailUrl) {
+        if (!body.title || !body.description || !body.videoUrl || !body.thumbnailUrl) {
             return NextResponse.json(
                 { error: "Missing required title." },
                 { status: 400 }

@@ -14,6 +14,8 @@
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.2",
     "daisyui": "^5.1.26",
+    "dotenv": "^17.2.3",
+    "imagekitio-next": "^1.0.1",
     "mongoose": "^8.18.3",
     "next": "15.5.4",
     "next-auth": "^4.24.11",

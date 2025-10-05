@@ -13,19 +13,23 @@ import { LuX } from 'react-icons/lu'
 import { useRouter } from 'next/navigation'
 import LoadingSpinner from './LoadingSpinner'
 import { RiCloseFill } from 'react-icons/ri'
+import FileUpload from './FileUpload'
+import { apiClient } from '@/lib/api-client'
 
 export default function Navbar() {
     const pathname = usePathname()
     const [redirection, setRedirection] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [fileUploadLoading, setFileUploading] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const [openVideoUploadForm, setOpenVideoUploadForm] = useState(false)
-    const [fileTitle, setfileTitle] = useState<string | null>()
-    const [fileDescription, setFileDescription] = useState<string | null>()
+    const [fileTitle, setFileTitle] = useState('')
+    const [fileDescription, setFileDescription] = useState('')
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const [isUploading, setIsUploading] = useState(false)
+    const [uploadedFileData, setUploadedFileData] = useState<any>(null)
     const { data: session } = useSession()
     const router = useRouter()
-
-    const file = useRef<HTMLInputElement>(null)
 
     const navItems = [
         { href: '/pages/login', label: 'Login' },
@@ -50,22 +54,91 @@ export default function Navbar() {
         }
     }
 
+    const handleUploadSuccess = (uploadResponse: any) => {
+        setUploadedFileData(uploadResponse)
+        // toast.success("File uploaded successfully!")
 
-    const toggleCloseVIdeoUoloadFromModal = () => {
+        // Auto-submit form if we have all data
+        if (fileTitle && fileDescription) {
+            handleFormSubmit(uploadResponse)
+        }
+    }
+
+    const handleUploadProgress = (progress: number) => {
+        setUploadProgress(progress)
+    }
+
+    const handleUploadError = (error: string) => {
+        toast.error(error)
+    }
+
+    const handleUploadStart = () => {
+        setIsUploading(true)
+        setUploadProgress(0)
+    }
+
+    const handleUploadEnd = () => {
+        setIsUploading(false)
+    }
+
+    const handleFormSubmit = async (fileData?: any, e?: React.FormEvent) => {
+        e?.preventDefault()
+        const finalFileData = fileData || uploadedFileData
+
+        if (!finalFileData) {
+            toast.error("Please upload a file first")
+            return
+        }
+
+        if (!fileTitle.trim()) {
+            toast.error("Please enter a title")
+            return
+        }
+
+        try {
+            setFileUploading(true)
+
+            const videoData = {
+                title: fileTitle,
+                description: fileDescription,
+                videoUrl: finalFileData.url,
+                thumbnailUrl: finalFileData.thumbnailUrl || finalFileData.url,
+            }
+
+            const response = await apiClient.createVideo(videoData)
+            console.log(response)
+            toast.success("Video created successfully!")
+
+            // Reset form
+            setFileTitle('')
+            setFileDescription('')
+            setUploadedFileData(null)
+            setUploadProgress(0)
+            setOpenVideoUploadForm(false)
+
+            // Refresh the page or update video list
+            router.refresh()
+
+        } catch (error) {
+            console.error("Failed to create video:", error)
+            toast.error("Failed to create video. Please try again.")
+        } finally {
+            setFileUploading(false)
+        }
+    }
+
+    const toggleCloseVideoUploadFromModal = () => {
         setOpenVideoUploadForm(false)
-        setfileTitle("")
-        setFileDescription("")
-        if (file.current) file.current.value = "";
+        setFileTitle('')
+        setFileDescription('')
+        setUploadedFileData(null)
+        setUploadProgress(0)
+        setIsUploading(false)
     }
 
     const isActivePath = (path: string): boolean => {
         return pathname === path
     }
-
-    // TODO: update it
-    useEffect(() => {
-
-    }, [file])
 
     return (
         <>
@@ -246,13 +319,12 @@ export default function Navbar() {
                     {openVideoUploadForm && (
                         <>
                             <div className='fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4'>
-                                <div className='bg-gray-200 rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-gray-400 transfrom transition-all duration-300'>
+                                <div className='bg-gray-200 rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-gray-400 transform transition-all duration-300'>
                                     <div className="flex justify-end m-0">
                                         <button
-                                            onClick={toggleCloseVIdeoUoloadFromModal}
-                                            className={`m-3 cursor-pointer
-                                                
-                                            `}
+                                            onClick={toggleCloseVideoUploadFromModal}
+                                            disabled={isUploading}
+                                            className={`m-3 cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         >
                                             <RiCloseFill className="text-xl" />
                                         </button>
@@ -263,64 +335,64 @@ export default function Navbar() {
                                     <form
                                         className='m-5 space-y-4'
                                     >
-
                                         <input
                                             type="text"
                                             placeholder='Title'
-                                            className='w-full px-3 py-2 border-b border-gray-700  focus:border-none focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 duration-200 text-sm sm:text-base'
+                                            value={fileTitle}
+                                            onChange={(e) => setFileTitle(e.target.value)}
+                                            className='w-full px-3 py-2 border-b border-gray-700 focus:border-none focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 duration-200 text-sm sm:text-base'
+                                            disabled={isUploading}
                                         />
 
                                         <textarea
                                             placeholder='Description'
-                                            className='w-full px-3 py-2 border rounded-xl border-gray-700  focus:border-none focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 duration-200 text-sm sm:text-base'
+                                            value={fileDescription}
+                                            onChange={(e) => setFileDescription(e.target.value)}
+                                            className='w-full px-3 py-2 border rounded-xl border-gray-700 focus:border-none focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 duration-200 text-sm sm:text-base'
+                                            disabled={isUploading}
                                         />
 
-                                        <div className="relative w-full">
-                                            <input
-                                                ref={file}
-                                                type="file"
-                                                className='block w-full text-sm text-gray-500
-                                                file:mr-4 file:py-3 file:px-4
-                                                file:rounded-lg file:border-0
-                                                file:text-sm file:font-semibold
-                                                file:bg-gray-800 file:text-white
-                                                hover:file:bg-gray-600
-                                                file:transition-colors file:duration-200
-                                                file:cursor-pointer
-                                                border border-gray-500 rounded-lg
-                                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                                            />
+                                        <FileUpload
+                                            fileType="video"
+                                            onSuccessMethod={handleUploadSuccess}
+                                            onProgress={handleUploadProgress}
+                                            onError={handleUploadError}
+                                            onUploadStart={handleUploadStart}
+                                            onUploadEnd={handleUploadEnd}
+                                        />
 
-                                            <button
-                                                type="button"
-                                                onClick={() => { if (file.current) file.current.value = ""; }}
-                                                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-xs sm:text-sm text-gray-600 hover:text-red-600 font-medium cursor-pointer transition-colors p-1 rounded-full hover:bg-gray-200'
-                                                title="Clear file"
-                                            >
-                                                <RiCloseFill className="text-lg" />
-                                            </button>
-
-                                        </div>
+                                        {isUploading && (
+                                            <div className="mt-2">
+                                                <div className="w-full bg-gray-300 rounded-full h-2">
+                                                    <div
+                                                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                                        style={{ width: `${uploadProgress}%` }}
+                                                    />
+                                                </div>
+                                                <div className="text-center text-sm text-gray-600 mt-1">
+                                                    {uploadProgress}%
+                                                </div>
+                                            </div>
+                                        )}
 
                                         <button
-                                            disabled={!fileTitle || !fileDescription || !(file.current && file.current.value)}
+                                            onClick={(e) => {
+                                                handleFormSubmit(e)
+                                            }}
+                                            type="submit"
+                                            disabled={!fileTitle || !uploadedFileData || isUploading || loading}
                                             className='uppercase bg-gray-800 text-white w-full rounded-lg py-2 font-medium cursor-pointer hover:bg-gray-600 transition-all duration-300 disabled:bg-gray-600 disabled:cursor-not-allowed'
                                         >
-                                            Upload
+                                            {fileUploadLoading ? <LoadingSpinner message="Uploading...." /> : 'Create Video'}
                                         </button>
                                     </form>
-
-
                                 </div>
-
-
-
-
                             </div>
                         </>
                     )}
                 </>
-            )}
+            )
+            }
         </>
     )
 }
