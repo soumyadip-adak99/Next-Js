@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface Imessage {
-    message: string | any
+    message: string
 }
 
 export default function LoadingSpinner({ message }: Imessage) {

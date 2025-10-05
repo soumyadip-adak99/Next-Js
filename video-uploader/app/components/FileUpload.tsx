@@ -1,14 +1,13 @@
 "use client"
 
 import {
-    ImageKitAbortError,
-    ImageKitInvalidRequestError,
-    ImageKitServerError,
-    ImageKitUploadNetworkError,
+    // ImageKitAbortError,
+    // ImageKitInvalidRequestError,
+    // ImageKitServerError,
+    // ImageKitUploadNetworkError,
     upload,
 } from "@imagekit/next";
 import { useRef, useState, forwardRef, useImperativeHandle } from "react";
-import { RiCloseFill } from 'react-icons/ri'
 import LoadingSpinner from "./LoadingSpinner";
 
 interface FileUploadProps {

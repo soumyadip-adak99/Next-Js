@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import { apiClient } from '@/lib/api-client'
+// import Image from 'next/image'
+// import { Image } from '@imagekit/next'
 
 interface Video {
     _id: string
@@ -100,8 +102,8 @@ export default function VideoComponent() {
                                 ref={videoRef}
                                 controls
                                 autoPlay
-                                muted 
-                                playsInline 
+                                muted
+                                playsInline
                                 className="w-full h-auto max-h-[70vh]"
                                 src={selectedVideo}
                                 onError={(e) => console.error('Video error:', e)}
@@ -123,9 +125,9 @@ export default function VideoComponent() {
                                 onClick={() => handleThumbnailClick(video.videoUrl)}
                             >
                                 <img
-                                    src={video.thumbnailUrl}
+                                    src={`https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg`}
                                     alt={video.title}
-                                    className="w-full h-48 object-cover"
+                                    className="w-30 h-78 object-cover"
                                 />
                                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
                                     <div className="bg-white bg-opacity-80 rounded-full p-3 transform scale-0 group-hover:scale-100 transition-transform">

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Mosaic } from 'react-loading-indicators'
 import { signOut, useSession } from 'next-auth/react'
 import { FaRegUser } from "react-icons/fa"
