@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import { apiClient } from '@/lib/api-client'
+import Image from 'next/image'
+// import Image from 'next/image'
 // import Image from 'next/image'
 // import { Image } from '@imagekit/next'
 
@@ -33,7 +35,7 @@ export default function VideoComponent() {
         try {
             const response = await apiClient.getVideos()
             console.log(response)
-            setVideos(response as Array<Video>)
+            setVideos(response as unknown as Array<Video>)
         } catch (error) {
             console.error('Error fetching videos:', error)
         } finally {
@@ -124,11 +126,17 @@ export default function VideoComponent() {
                                 className="relative cursor-pointer group"
                                 onClick={() => handleThumbnailClick(video.videoUrl)}
                             >
-                                <img
+                                import Image from 'next/image';
+
+                                <Image
                                     src={`https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg`}
                                     alt={video.title}
-                                    className="w-30 h-78 object-cover"
+                                    width={120}
+                                    height={312}
+                                    className="object-cover"
+                                    style={{ width: '120px', height: '312px' }}
                                 />
+
                                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
                                     <div className="bg-white bg-opacity-80 rounded-full p-3 transform scale-0 group-hover:scale-100 transition-transform">
                                         <svg className="w-8 h-8 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
